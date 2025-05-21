@@ -1,9 +1,9 @@
-// lib/app.dart
-// ignore_for_file: library_private_types_in_public_api
 import 'package:flutter/material.dart';
-import 'package:tablapp_daimoku/screens/home_screen.dart';
-import 'package:tablapp_daimoku/screens/formulario_inicial.dart';
 import 'package:tablapp_daimoku/screens/bienvenida_screen.dart';
+import 'package:tablapp_daimoku/screens/formulario_personal.dart';
+import 'package:tablapp_daimoku/screens/home_screen.dart';
+import 'package:tablapp_daimoku/screens/horario_y_objetivos.dart';
+import 'package:tablapp_daimoku/screens/invocacion_screen.dart'; // Nuevo archivo
 import 'package:tablapp_daimoku/screens/temporizador_screen.dart';
 
 class TablAppDeDaimoku extends StatelessWidget {
@@ -14,16 +14,28 @@ class TablAppDeDaimoku extends StatelessWidget {
     return MaterialApp(
       title: 'TablApp de Daimoku',
       debugShowCheckedModeBanner: false,
-      initialRoute: HomeScreen.routeName,
+      theme: ThemeData(
+        primarySwatch: Colors.blueGrey,
+        appBarTheme: const AppBarTheme(
+          centerTitle: true,
+          elevation: 0,
+          iconTheme: IconThemeData(color: Colors.white),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          ),
+        ),
+      ),
+      initialRoute: '/',
       routes: {
-        HomeScreen.routeName: (_) => const HomeScreen(),
-        FormularioInicialScreen.routeName:
-            (_) => const FormularioInicialScreen(),
-        BienvenidaScreen.routeName: (_) => const BienvenidaScreen(),
-        TemporizadorScreen.routeName: (_) => const TemporizadorScreen(),
-        // InformeScreen.routeName: (_) => const InformeScreen(),
+        '/': (context) => const BienvenidaScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/datos-personales': (context) => const FormularioPersonalScreen(),
+        '/objetivos': (context) => const HorarioYObjetivosScreen(),
+        '/invocacion': (context) => const InvocacionScreen(), // Pantalla nueva
+        '/temporizador': (context) => const TemporizadorScreen(),
       },
-      theme: ThemeData(primarySwatch: Colors.indigo),
     );
   }
 }
