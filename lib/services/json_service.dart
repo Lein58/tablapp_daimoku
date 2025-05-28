@@ -1,49 +1,46 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 class JsonService {
-  // Guardar datos personales
   static Future<void> savePersonalData(Map<String, dynamic> data) async {
     await _saveToFile('datos_personales.json', data);
   }
 
-  // Guardar datos de invocación
   static Future<void> saveInvocationData(Map<String, dynamic> data) async {
     await _saveToFile('datos_invocacion.json', data);
   }
 
-  // Método PRIVADO para guardar
-  static Future<void> _saveToFile(
-    String filename,
-    Map<String, dynamic> data,
-  ) async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/$filename');
-      await file.writeAsString(jsonEncode(data));
-      if (kDebugMode) {
-        debugPrint('✅ Datos guardados en: ${file.path}');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        debugPrint('❌ Error: $e');
-      }
-    }
+  static Future<void> saveJson(String archivo, dynamic data) async {
+    await _saveToFile(archivo, data);
   }
 
-  // Cargar datos personales
+  static Future<dynamic> loadJson(String archivo) async {
+    final contenido = await rootBundle.loadString('assets/json/$archivo');
+    return jsonDecode(contenido);
+  }
+
   static Future<Map<String, dynamic>> loadPersonalData() async {
     return await _loadFromFile('datos_personales.json');
   }
 
-  // Cargar datos de invocación
   static Future<Map<String, dynamic>> loadInvocationData() async {
     return await _loadFromFile('datos_invocacion.json');
   }
 
-  // Método PRIVADO para cargar
+  static Future<void> _saveToFile(
+      String filename, Map<String, dynamic> data) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/$filename');
+      await file.writeAsString(jsonEncode(data));
+    } catch (e) {
+      if (kDebugMode) debugPrint('❌ Error guardando $filename: $e');
+    }
+  }
+
   static Future<Map<String, dynamic>> _loadFromFile(String filename) async {
     try {
       final directory = await getApplicationDocumentsDirectory();
@@ -52,9 +49,7 @@ class JsonService {
         return jsonDecode(await file.readAsString());
       }
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint('❌ Error: $e');
-      }
+      if (kDebugMode) debugPrint('❌ Error leyendo $filename: $e');
     }
     return {};
   }

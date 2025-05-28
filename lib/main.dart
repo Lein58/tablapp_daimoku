@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Para configurar orientación
-import 'app.dart';
+import 'package:flutter/services.dart';
+import 'app.dart'; // Asegurate de que existe y exporta TablAppDeDaimoku
 
-void main() async {
-  // Asegura la inicialización de bindings de Flutter
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Configuración inicial del sistema
-  await _setupAppConfig();
-
-  runApp(const TablAppDeDaimoku());
-}
-
-Future<void> _setupAppConfig() async {
-  // Bloquea la orientación a portrait (opcional)
+  // Bloquea la orientación a portrait
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  // Configura el estilo de la barra de estado (opcional)
+  // Estilo barra de estado
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
     ),
   );
+
+  runApp(const TablAppDeDaimoku());
 }

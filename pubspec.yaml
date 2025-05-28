@@ -5,13 +5,14 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.2
+  sdk: '>=2.19.0 <4.0.0'  # Versión null-safe
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
   path_provider: ^2.1.1
+  shared_preferences: ^2.2.2  # Corregido: indentación y versión
 
 dev_dependencies:
   flutter_test:
@@ -23,3 +24,9 @@ flutter:
 
   assets:
     - assets/json/aliento_diario.json
+    - assets/json/lema_anual.json
+    - assets/json/guias_eternas.json
+    - assets/json/objetivos.json
+    - assets/json/tiempo_de_practica.json
+    - assets/json/horarios_de_practica.json
+    - assets/json/datos_personales.json

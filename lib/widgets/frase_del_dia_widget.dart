@@ -1,54 +1,62 @@
-// Widget para mostrar la frase del día en la pantalla de bienvenida
-
+// frase_del_dia_widget.dart
 import 'package:flutter/material.dart';
-import 'package:tablapp_daimoku/services/frase_service.dart';
+import '../services/frase_service.dart';
 
-class FraseDelDiaWidget extends StatefulWidget {
+/// Widget que muestra el aliento diario usando FraseService
+class FraseDelDiaWidget extends StatelessWidget {
   const FraseDelDiaWidget({super.key});
 
   @override
-  State<FraseDelDiaWidget> createState() => _FraseDelDiaWidgetState();
-}
-
-class _FraseDelDiaWidgetState extends State<FraseDelDiaWidget> {
-  String frase = '';
-
-  @override
-  void initState() {
-    super.initState();
-    cargarFrase();
-  }
-
-  Future<void> cargarFrase() async {
-    final fraseCargada = await FraseService.obtenerFraseDelDia();
-    setState(() {
-      frase = fraseCargada;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 8,
-              offset: Offset(0, 4),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Text(
-          frase,
-          style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
-          textAlign: TextAlign.center,
-        ),
-      ),
+    return FutureBuilder<FraseDiaria>(
+      future: FraseService.obtenerAlientoDelDia(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: \${snapshot.error}'));
+        }
+
+        final frase = snapshot.data!;
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Aliento diario.',
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Card(
+                elevation: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Text(
+                        frase.texto,
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.center,
+                      ),
+                      if (frase.referencia.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          frase.referencia,
+                          style: Theme.of(context).textTheme.bodySmall,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
